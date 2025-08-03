@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:37:17 by jchiu             #+#    #+#             */
-/*   Updated: 2025/07/23 14:26:18 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/03 18:35:47 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,7 @@ int					g_ft_strlen(char *str);
 char				*g_ft_strdup(char *s1);
 char				*g_ft_substr(char *s, int start, int len);
 int					check_line(char *to_check);
+void				free_split(char **split);
+int					count_args(char **path);
 
 #endif

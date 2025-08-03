@@ -6,13 +6,13 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:35:32 by jchiu             #+#    #+#             */
-/*   Updated: 2025/07/23 11:48:06 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/03 15:23:01 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	free_split(char **split, int i)
+static void	free_str(char **split, int i)
 {
 	while (i >= 0)
 	{
@@ -93,7 +93,7 @@ char	**ft_split(char const *s, char c)
 		{
 			split[i] = malloc((count_letter(s, c, x) + 1) * sizeof(char));
 			if (split[i] == NULL)
-				return (free_split(split, i), NULL);
+				return (free_str(split, i), NULL);
 			i++;
 		}
 		x++;

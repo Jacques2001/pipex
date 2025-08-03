@@ -1,90 +1,123 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/03 12:33:29 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/03 18:35:13 by jchiu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libs/pipex.h"
 
-void give_slash(char **path)
+char	**give_slash(char **path)
 {
-    int i;
+	int		i;
+	char	**copy;
 
-    i = 0;
-    while (path[i])
-    {
-        path[i] = ft_strjoin(path[i], "/");
-        if (!path[i])
-            return ;
-        i++;
-    }
-}
-int check_av2(char **path, char **av, t_vars *vars)
-{
-    int i;
-    char *joined;
-    char **split;
-
-    i = 0;
-    split = ft_split(av[2], ' ');
-    while (path[i])
-    {
-        joined = ft_strjoin(path[i], split[0]);
-        if (access(joined, X_OK) == 0)
-            return (vars->av2 = joined, 1);
-        free(joined);
-        joined = NULL;
-        i++;
-    }
-    return 0;
+	i = 0;
+	copy = malloc((count_args(path) + 1) * sizeof(char *));
+	if (!copy)
+		return (NULL);
+	while (i < count_args(path) + 1)
+		copy[i++] = NULL;
+	i = 0;
+	while (path[i])
+	{
+		copy[i] = ft_strjoin(path[i], "/");
+		if (!copy[i])
+			return (free_split(copy), NULL);
+		i++;
+	}
+	free_split(path);
+	return (copy);
 }
 
-int check_av3(char **path, char **av, t_vars *vars)
+int	check_av2(char **path, char **av, t_vars *vars)
 {
-    int i;
-    char *joined;
-    char **split;
+	int		i;
+	char	*joined;
+	char	**split;
 
-    i = 0;
-    split = ft_split(av[3], ' ');
-    while (path[i])
-    {
-        joined = ft_strjoin(path[i], split[0]);
-        if (access(joined, X_OK) == 0)
-            return (vars->av3 = joined, 1);
-        free(joined);
-        joined = NULL;
-        i++;
-    }
-    return 0;
+	i = 0;
+	split = ft_split(av[2], ' ');
+	if (!split)
+		return (0);
+	while (path[i])
+	{
+		joined = ft_strjoin(path[i], split[0]);
+		if (access(joined, X_OK) == 0)
+			return (free_split(split), vars->av2 = joined, 1);
+		free(joined);
+		joined = NULL;
+		i++;
+	}
+	free_split(split);
+	return (0);
 }
 
-char    **find_path(char **env)
+int	check_av3(char **path, char **av, t_vars *vars)
 {
-    int i;
-    char **path;
+	int		i;
+	char	*joined;
+	char	**split;
 
-    i = 0;
-    path = NULL;
-    while (env[i])
-    {
-        if (ft_strncmp(env[i], "PATH=", 5) == 0)
-        {
-            env[i] = ft_substr(env[i], 5, ft_strlen(env[i]));
-            path = ft_split(env[i], ':');
-            if (!path)
-                return NULL;
-            break;
-        }
-        i++;
-    }
-    give_slash(path);
-    return path;
+	i = 0;
+	split = ft_split(av[3], ' ');
+	if (!split)
+		return (0);
+	while (path[i])
+	{
+		joined = ft_strjoin(path[i], split[0]);
+		if (access(joined, X_OK) == 0)
+			return (free_split(split), vars->av3 = joined, 1);
+		free(joined);
+		joined = NULL;
+		i++;
+	}
+	free_split(split);
+	return (0);
 }
 
-void    vars_init(t_vars *vars, char **av, char **env)
+char	**find_path(char **env)
 {
-    vars->fd_in = 0;
-    vars->fd_out = 0;
-    vars->path = NULL;
-    // vars->pid_1 = 0;
-    // vars->pid_2 = 0;
-    vars->env_cpy = env;
-    vars->av_cpy = av;
-    vars->av2 = NULL;
-    vars->av3 = NULL;
+	int		i;
+	char	**path;
+	char	**copy;
+	char	**env_cpy;
+
+	i = 0;
+	path = NULL;
+	env_cpy = malloc((count_args(env) + 1) * sizeof(char *));
+	if (!env_cpy)
+		return (NULL);
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
+		{
+			env_cpy[i] = ft_substr(env[i], 5, ft_strlen(env[i]));
+			if (!env_cpy[i])
+				return (NULL);
+			path = ft_split(env_cpy[i], ':');
+			free(env_cpy[i]);
+			break ;
+		}
+		i++;
+	}
+	return (free(env_cpy), copy = give_slash(path), copy);
+}
+
+void	vars_init(t_vars *vars, char **av, char **env)
+{
+	vars->fd_in = 0;
+	vars->fd_out = 0;
+	vars->path = NULL;
+	vars->pid_1 = 0;
+	vars->pid_2 = 0;
+	vars->env_cpy = env;
+	vars->av_cpy = av;
+	vars->av2 = NULL;
+	vars->av3 = NULL;
 }
