@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 13:36:20 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/09 15:23:20 by jchiu            ###   ########.fr       */
+/*   Created: 2025/08/09 16:19:07 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/09 16:20:18 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libs/pipex.h"
 
-size_t	ft_strlen(const char *s)
+int	is_empty_cmd(char *cmd)
 {
-	size_t	i;
+	if (!cmd || cmd[0] == '\0')
+		return (1);
+	return (0);
+}
 
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+void	free_all(t_vars *vars)
+{
+	if (vars->av2)
+		free(vars->av2);
+	if (vars->av3)
+		free(vars->av3);
+	if (vars->path)
+		free_split(vars->path);
+	if (vars)
+		free(vars);
 }

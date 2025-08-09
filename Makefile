@@ -8,7 +8,7 @@ INC_DIR         = 	includes
 LIBFT_DIR 		= 	./libft
 LIBFT_A 		=	$(LIBFT_DIR)/libft.a
 
-SRCS 			=	./srcs/main.c ./srcs/parsing.c ./srcs/process.c
+SRCS 			=	./srcs/main.c ./srcs/parsing.c ./srcs/process.c ./srcs/parsing2.c
 BONUS			=	./bonus/main_bonus.c ./bonus/parsing_bonus.c ./bonus/process_bonus.c
 
 OBJS        	= 	$(SRCS:%.c=$(OBJ_DIR)/%.o)

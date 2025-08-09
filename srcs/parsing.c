@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:29 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/03 18:35:13 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/09 15:21:47 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	check_av2(char **path, char **av, t_vars *vars)
 	char	**split;
 
 	i = 0;
+	if (!av[2])
+		return (1);
 	split = ft_split(av[2], ' ');
 	if (!split)
 		return (0);
@@ -65,6 +67,8 @@ int	check_av3(char **path, char **av, t_vars *vars)
 	char	**split;
 
 	i = 0;
+	if (!av[3])
+		return (1);
 	split = ft_split(av[3], ' ');
 	if (!split)
 		return (0);

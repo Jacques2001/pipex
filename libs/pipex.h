@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/09 11:40:55 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/09 16:20:01 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int			check_av3(char **path, char **av, t_vars *vars);
 void		vars_init(t_vars *vars, char **av, char **env);
 void		child1_process(t_vars *vars, char **av, int *pipefd);
 void		child2_process(t_vars *vars, char **av, int *pipefd);
-int			pipex(t_vars *vars, char **av);
+void		pipex(t_vars *vars, char **av);
 void		free_all(t_vars *vars);
+int			is_empty_cmd(char *cmd);
 
 #endif
