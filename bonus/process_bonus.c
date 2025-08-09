@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process.c                                          :+:      :+:    :+:   */
+/*   process_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:37 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/09 11:41:09 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/09 12:33:07 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libs/pipex.h"
+#include "../libs/pipex_bonus.h"
 
 void	free_all(t_vars *vars)
 {
@@ -67,9 +67,9 @@ void	child2_process(t_vars *vars, char **av, int *pipefd)
 	exit(127);
 }
 
-int	pipex(t_vars *vars, char **av)
+int	pipex(t_vars *vars, char **av, int ac)
 {
-	int	pipefd[2];
+	int	pipefd[ac / 2];
 
 	if (pipe(pipefd) < 0)
 		return (perror("Pipe"), free_all(vars), exit(1), 1);
