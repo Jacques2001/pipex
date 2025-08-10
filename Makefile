@@ -1,5 +1,5 @@
 NAME            = 	pipex
-# NAME_BONUS		= 	bonus
+NAME_BONUS		= 	pipexes
 
 SRC_DIR         = 	srcs
 
@@ -9,7 +9,8 @@ LIBFT_DIR 		= 	./libft
 LIBFT_A 		=	$(LIBFT_DIR)/libft.a
 
 SRCS 			=	./srcs/main.c ./srcs/parsing.c ./srcs/process.c ./srcs/parsing2.c
-# BONUS			=	
+
+BONUS		=	./bonus/main_bonus.c ./bonus/parsing_bonus.c ./bonus/parsing2_bonus.c ./bonus/process_bonus.c
 
 OBJS        	= 	$(SRCS:%.c=$(OBJ_DIR)/%.o)
 OBJS_BONUS		=	$(BONUS:%.c=$(OBJ_DIR)/%.o)
@@ -19,7 +20,7 @@ CFLAGS      	= 	-Wall -Wextra -Werror
 RM          	= 	rm -f
 
 all: $(NAME)
-# bonus: $(NAME_BONUS)
+bonus: $(NAME_BONUS)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -28,8 +29,8 @@ $(OBJ_DIR)/%.o: %.c
 $(NAME): $(OBJS) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) -o $(NAME)
 
-# $(NAME_BONUS): $(OBJS_BONUS) $(LIBFT_A)
-# 	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT_A) -o $(NAME_BONUS)
+$(NAME_BONUS): $(OBJS_BONUS) $(LIBFT_A)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT_A) -o $(NAME_BONUS)
 
 $(LIBFT_A):
 	@$(MAKE) -C $(LIBFT_DIR)

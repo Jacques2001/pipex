@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/09 12:32:47 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/10 15:14:56 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,21 @@
 
 typedef struct s_vars
 {
-	char	*av2;
-	char	*av3;
+	char	**av;
 	int		fd_in;
 	int		fd_out;
-	pid_t	pid_1;
-	pid_t	pid_2;
+	pid_t	*pid;
 	char	**path;
 	char	**env_cpy;
 	char	**av_cpy;
 }			t_vars;
 
 char		**find_path(char **env);
-int			check_av2(char **path, char **av, t_vars *vars);
-int			check_av3(char **path, char **av, t_vars *vars);
-void		vars_init(t_vars *vars, char **av, char **env);
-void		child1_process(t_vars *vars, char **av, int *pipefd);
-void		child2_process(t_vars *vars, char **av, int *pipefd);
-int			pipex(t_vars *vars, char **av, int ac);
+int			check_av(char **path, char *str, t_vars *vars);
+void		vars_init(t_vars *vars, char **av, char **env, int ac);
+void		pipex(t_vars *vars, char **av, int ac);
 void		free_all(t_vars *vars);
+void		close_all(t_vars *vars, int *pipefd);
+int			is_empty_cmd(int ac, char **av);
 
 #endif
