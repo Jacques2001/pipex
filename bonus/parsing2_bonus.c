@@ -33,3 +33,18 @@ void	close_all(t_vars *vars, int *pipefd)
 	close(pipefd[0]);
 	close(pipefd[1]);
 }
+
+void	close_all_all(t_vars *vars, int (*pipefd)[2], int ac)
+{
+	int i;
+
+	i = 0;
+	close(vars->fd_in);
+	close(vars->fd_out);
+	while (i < ac - 4)
+	{
+		close(pipefd[i][0]);
+		close(pipefd[i][1]);
+		i++;
+	}
+}
