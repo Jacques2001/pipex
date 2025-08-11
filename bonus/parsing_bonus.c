@@ -39,7 +39,7 @@ int	check_av(char **path, char *str, t_vars *vars)
 	{
 		joined = ft_strjoin(path[i], split[0]);
 		if (access(joined, X_OK) == 0)
-			return (free_split(split), vars->av[i] = joined, 1);
+			return (free_split(split), vars->av[vars->av_i++] = joined, 1);
 		free(joined);
 		joined = NULL;
 		i++;
@@ -81,6 +81,7 @@ void	vars_init(t_vars *vars, char **av, char **env, int ac)
 	int i;
 
 	i = 0;
+	vars->av_i = 0;
 	vars->fd_in = 0;
 	vars->fd_out = 0;
 	vars->path = NULL;

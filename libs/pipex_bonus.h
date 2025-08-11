@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/10 17:12:46 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/11 13:54:33 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 typedef struct s_vars
 {
+	int av_i;
 	char	**av;
 	int		fd_in;
 	int		fd_out;
