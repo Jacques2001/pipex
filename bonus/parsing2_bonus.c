@@ -16,8 +16,8 @@ int	is_empty_cmd(int ac, char **av)
 
 void	free_all(t_vars *vars)
 {
-	if (vars->pid)
-		free(vars->pid);
+	// if (vars->pid)
+	// 	free(vars->pid);
 	if (vars->av)
 		free_split(vars->av);
 	if (vars->path)

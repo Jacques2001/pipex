@@ -23,6 +23,7 @@ void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 
 void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 {
+	printf("Je suis rentre dans le last\n");
 	char	*cmd;
 	char	**split_cmd;
 	
@@ -31,7 +32,11 @@ void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
 	if (dup2(vars->fd_out, STDOUT_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	close_all(vars, pipefd[ac - 3]);
+	// close_all(vars, pipefd[ac - 3]);
+	close(pipefd[0][0]);
+	close(vars->fd_in);
+	close(pipefd[0][1]);
+	close(vars->fd_out);
 	cmd = vars->av[ac - 4];
 	if (!cmd)
 		return (free_split(split_cmd), free_all(vars), exit(127));
@@ -42,17 +47,22 @@ void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 
 void    middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int i)
 {
-    printf("je suis dans le milieux\n");
+	printf("Je suis rentre dans le middle\n");
 	char	*cmd;
 	char	**split_cmd;
 
-	split_cmd = ft_split(av[i + 2], ' ');
-	if (dup2(pipefd[i - 1][0], STDIN_FILENO) < 0)
+	(void)i;
+	split_cmd = ft_split(av[3], ' ');
+	if (dup2(pipefd[0][0], STDIN_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	if (dup2(pipefd[i][1], STDOUT_FILENO) < 0)
+	if (dup2(pipefd[1][1], STDOUT_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-    close_all(vars, pipefd[i + 2]);
-	cmd = vars->av[i];
+    // close_all(vars, pipefd[1]);
+	close(vars->fd_in);
+	close(vars->fd_out);
+	close(pipefd[0][0]);
+	close(pipefd[1][1]);
+	cmd = vars->av[1];
 	if (!cmd)
 		return (free_split(split_cmd), free_all(vars), exit(127));
 	execve(cmd, split_cmd, vars->env_cpy);
@@ -101,6 +111,6 @@ void	pipex(t_vars *vars, char **av, int ac)
 	close(pipefd[0][1]);
     while (wait(NULL) > 0)
         ;
-    // free_all(vars);
+    free_all(vars);
 }
 
