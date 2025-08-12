@@ -23,19 +23,18 @@ void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 
 void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 {
-	printf("Je suis rentre dans le last\n");
 	char	*cmd;
 	char	**split_cmd;
 	
 	split_cmd = ft_split(av[ac - 2], ' ');
-	if (dup2(pipefd[ac - 3][0], STDIN_FILENO) < 0)
+	if (dup2(pipefd[ac - 5][0], STDIN_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
 	if (dup2(vars->fd_out, STDOUT_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
 	// close_all(vars, pipefd[ac - 3]);
-	close(pipefd[0][0]);
+	close(pipefd[ac - 5][0]);
 	close(vars->fd_in);
-	close(pipefd[0][1]);
+	close(pipefd[ac - 5][1]);
 	close(vars->fd_out);
 	cmd = vars->av[ac - 4];
 	if (!cmd)
