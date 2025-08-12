@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/11 13:54:33 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/12 18:14:53 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void		vars_init(t_vars *vars, char **av, char **env, int ac);
 void		pipex(t_vars *vars, char **av, int ac);
 void		free_all(t_vars *vars);
 void		close_all(t_vars *vars, int *pipefd);
-void	close_all_all(t_vars *vars, int (*pipefd)[2], int ac);
+void		close_all_all(t_vars *vars, int (*pipefd)[2], int ac);
 int			is_empty_cmd(int ac, char **av);
+void		close_all_pipes(int (*pipefd)[2], int ac);
 
 #endif

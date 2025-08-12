@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/12 18:16:18 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/12 18:16:19 by jchiu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libs/pipex_bonus.h"
 
 void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 {
-	printf("Je suis dans le first\n");
 	char	*cmd;
 	char	**split_cmd;
 
@@ -24,20 +35,15 @@ void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 
 void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 {
-	printf("Je suis dans le last\n");
 	char	*cmd;
 	char	**split_cmd;
-	
+
 	split_cmd = ft_split(av[ac - 2], ' ');
 	if (dup2(pipefd[ac - 5][0], STDIN_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
 	if (dup2(vars->fd_out, STDOUT_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	for (int i = 0; i < ac - 4; i++)
-	{
-		close(pipefd[i][0]); // lecture
-		close(pipefd[i][1]); // écriture
-	}
+	close_all_pipes(pipefd, ac);
 	close(vars->fd_in);
 	close(vars->fd_out);
 	cmd = vars->av[ac - 4];
@@ -48,26 +54,21 @@ void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
 	exit(1);
 }
 
-void    middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac, int i)
+void	middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac,
+		int i)
 {
-	printf("Je suis rentre dans le middle\n");
 	char	*cmd;
 	char	**split_cmd;
 
-	(void)i;
-	split_cmd = ft_split(av[3], ' ');
-	if (dup2(pipefd[0][0], STDIN_FILENO) < 0)
+	split_cmd = ft_split(av[i + 2], ' ');
+	if (dup2(pipefd[i - 1][0], STDIN_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	if (dup2(pipefd[1][1], STDOUT_FILENO) < 0)
+	if (dup2(pipefd[i][1], STDOUT_FILENO) < 0)
 		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	for (int k = 0; k < ac - 4; k++)
-	{
-		close(pipefd[k][0]); // lecture
-		close(pipefd[k][1]); // écriture
-	}
+	close_all_pipes(pipefd, ac);
 	close(vars->fd_in);
 	close(vars->fd_out);
-	cmd = vars->av[1];
+	cmd = vars->av[i];
 	if (!cmd)
 		return (free_split(split_cmd), free_all(vars), exit(127));
 	execve(cmd, split_cmd, vars->env_cpy);
@@ -75,52 +76,49 @@ void    middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac, 
 	exit(1);
 }
 
-void	pipex(t_vars *vars, char **av, int ac)
+void	exec_children(t_vars *vars, char **av, int ac, int (*pipefd)[2])
 {
-	int	pipefd[ac - 5][2];
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < ac - 4)
-    {
-        if (pipe(pipefd[i]) < 0)
-            return (perror("Pipe"), free_all(vars), exit(1));
-        i++;
-    }
-    i = 1;
+	i = 1;
 	vars->pid[0] = fork();
 	if (vars->pid[0] < 0)
 		return (perror("Fork"), free_all(vars), exit(1));
 	if (vars->pid[0] == 0)
 		first_child_process(vars, av, pipefd);
-    while (i < ac - 4)
-    {
-        vars->pid[i] = fork();
-        if (vars->pid[i] < 0)
-            return (perror("Fork"), free_all(vars), exit(1));
-        if (vars->pid[i] == 0)
-            middle_child_process(vars, av, pipefd, ac, i);
-        else
-            ft_printf("Je suis dans le processus Parent\n");
-        i++;
-    }
+	while (i < ac - 4)
+	{
+		vars->pid[i] = fork();
+		if (vars->pid[i] < 0)
+			return (perror("Fork"), free_all(vars), exit(1));
+		if (vars->pid[i] == 0)
+			middle_child_process(vars, av, pipefd, ac, i);
+		i++;
+	}
 	vars->pid[ac - 4] = fork();
 	if (vars->pid[ac - 4] < 0)
 		return (perror("Fork"), free_all(vars), exit(1));
 	if (vars->pid[ac - 4] == 0)
 		last_child_process(vars, av, pipefd, ac);
-    // close_all_all(vars, pipefd, ac);
-	close(vars->fd_in);
-	close(vars->fd_out);
-	// close(pipefd[0][0]);
-	// close(pipefd[0][1]);
-	for (int i = 0; i < ac - 4; i++)
-	{
-		close(pipefd[i][0]); // lecture
-		close(pipefd[i][1]); // écriture
-	}
-    while (wait(NULL) > 0)
-        ;
-    // free_all(vars);
 }
 
+void	pipex(t_vars *vars, char **av, int ac)
+{
+	int	pipefd[ac - 5][2];
+	int	i;
+
+	i = 0;
+	while (i < ac - 4)
+	{
+		if (pipe(pipefd[i]) < 0)
+			return (perror("Pipe"), free_all(vars), exit(1));
+		i++;
+	}
+	exec_children(vars, av, ac, pipefd);
+	close_all_pipes(pipefd, ac);
+	close(vars->fd_in);
+	close(vars->fd_out);
+	while (wait(NULL) > 0)
+		;
+	// free_all(vars);
+}

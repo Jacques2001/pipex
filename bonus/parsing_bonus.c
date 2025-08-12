@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/12 18:15:57 by jchiu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libs/pipex_bonus.h"
 
 char	**give_slash(char **path)
@@ -78,7 +90,7 @@ char	**find_path(char **env)
 
 void	vars_init(t_vars *vars, char **av, char **env, int ac)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	vars->av_i = 0;
@@ -93,7 +105,7 @@ void	vars_init(t_vars *vars, char **av, char **env, int ac)
 	}
 	vars->env_cpy = env;
 	vars->av_cpy = av;
-	vars->av = malloc((ac - 3) * sizeof(char*));
+	vars->av = malloc((ac - 3) * sizeof(char *));
 	if (!vars->av)
 	{
 		free_all(vars);

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/12 18:15:53 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/12 18:15:54 by jchiu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libs/pipex_bonus.h"
 
 int	main(int ac, char **av, char **env)
 {
 	t_vars	*vars;
-    int i;
+	int		i;
 
-    i = 2;
+	i = 2;
 	if (is_empty_cmd(ac, av) == 1)
 		return (ft_printf("Command not found\n"), 1);
 	if (ac < 5)
@@ -21,12 +33,10 @@ int	main(int ac, char **av, char **env)
 	vars->fd_out = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (vars->fd_in == -1)
 		return (ft_printf("File not found\n"), free_all(vars), 0);
-    while (i < ac - 1)
-    {
-        if (check_av(vars->path, av[i], vars) == 0)
-            return (ft_printf("Command not found\n"), free_all(vars), 127);
-        i++;
-    }
-	pipex(vars, av, ac);
-	return (0);
+	while (i < ac - 1)
+	{
+		if (check_av(vars->path, av[i++], vars) == 0)
+			return (ft_printf("Command not found\n"), free_all(vars), 127);
+	}
+	return (pipex(vars, av, ac), 0);
 }
