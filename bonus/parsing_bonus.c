@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/12 18:15:57 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/12 18:28:08 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,27 +88,16 @@ char	**find_path(char **env)
 	return (free(env_cpy), copy = give_slash(path), copy);
 }
 
-void	vars_init(t_vars *vars, char **av, char **env, int ac)
+int	is_empty_cmd(int ac, char **av)
 {
 	int	i;
 
-	i = 0;
-	vars->av_i = 0;
-	vars->fd_in = 0;
-	vars->fd_out = 0;
-	vars->path = NULL;
-	vars->pid = malloc((ac - 3) * sizeof(pid_t));
-	if (!vars->pid)
+	i = 1;
+	while (i < ac - 1)
 	{
-		free_all(vars);
-		exit(1);
+		if (!av[i] || !av[i][0])
+			return (1);
+		i++;
 	}
-	vars->env_cpy = env;
-	vars->av_cpy = av;
-	vars->av = malloc((ac - 3) * sizeof(char *));
-	if (!vars->av)
-	{
-		free_all(vars);
-		exit(1);
-	}
+	return (0);
 }

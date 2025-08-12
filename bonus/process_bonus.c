@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:18 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/12 18:16:19 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/12 18:27:15 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,5 @@ void	pipex(t_vars *vars, char **av, int ac)
 	close(vars->fd_out);
 	while (wait(NULL) > 0)
 		;
-	// free_all(vars);
+	free_all(vars);
 }

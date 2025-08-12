@@ -6,30 +6,16 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:10 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/12 18:16:11 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/12 18:31:20 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libs/pipex_bonus.h"
 
-int	is_empty_cmd(int ac, char **av)
-{
-	int	i;
-
-	i = 1;
-	while (i < ac - 1)
-	{
-		if (!av[i] || !av[i][0])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 void	free_all(t_vars *vars)
 {
-	// if (vars->pid)
-	// 	free(vars->pid);
+	if (vars->pid)
+		free(vars->pid);
 	if (vars->av)
 		free_split(vars->av);
 	if (vars->path)
@@ -71,5 +57,30 @@ void	close_all_pipes(int (*pipefd)[2], int ac)
 		close(pipefd[i][0]);
 		close(pipefd[i][1]);
 		i++;
+	}
+}
+
+void	vars_init(t_vars *vars, char **av, char **env, int ac)
+{
+	int	i;
+
+	i = 0;
+	vars->av_i = 0;
+	vars->fd_in = 0;
+	vars->fd_out = 0;
+	vars->path = NULL;
+	vars->pid = malloc((ac - 3) * sizeof(pid_t));
+	if (!vars->pid)
+	{
+		free_all(vars);
+		exit(1);
+	}
+	vars->env_cpy = env;
+	vars->av_cpy = av;
+	vars->av = malloc((ac - 3) * sizeof(char *));
+	if (!vars->av)
+	{
+		free_all(vars);
+		exit(1);
 	}
 }
