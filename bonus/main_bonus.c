@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:53 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:29:35 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 16:51:03 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,15 @@ int	main(int ac, char **av, char **env)
 	vars->path = find_path(env);
 	if (!vars->path)
 		return (free_all(vars), 1);
-	vars->fd_in = open(av[1], O_RDONLY);
+	if (ft_strncmp(av[1], "here_doc", 8) == 0)
+		heredoc(vars, &ac, &av);
+	else
+	{
+		vars->fd_in = open(av[1], O_RDONLY);
+		if (vars->fd_in == -1)
+			return (ft_printf("File not found\n"), free_all(vars), 0);
+	}
 	vars->fd_out = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (vars->fd_in == -1)
-		return (ft_printf("File not found\n"), free_all(vars), 0);
 	check_cmd(vars, av);
 	return (pipex(vars, av), 0);
 }
