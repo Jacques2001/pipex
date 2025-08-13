@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:18 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:06:39 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:53:07 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,106 +19,113 @@ void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 
 	split_cmd = ft_split(av[2], ' ');
 	if (dup2(vars->fd_in, STDIN_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
 	if (dup2(pipefd[0][1], STDOUT_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
 	close(pipefd[0][0]);
 	close(pipefd[0][1]);
 	close(vars->fd_in);
 	close(vars->fd_out);
 	cmd = vars->av[0];
 	if (!cmd)
-		return (free_split(split_cmd), free_all(vars), exit(127));
+		return (free(pipefd), free_split(split_cmd), free_all(vars), exit(127));
 	if (execve(cmd, split_cmd, vars->env_cpy) < 0)
-		return (perror("execve first"), free_all(vars), exit(1));
+		return (perror("execve first"), free(pipefd), free_all(vars), exit(1));
 }
 
-void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac)
+void	last_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 {
 	char	*cmd;
 	char	**split_cmd;
 
-	split_cmd = ft_split(av[ac - 2], ' ');
-	if (dup2(pipefd[ac - 5][0], STDIN_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
+	split_cmd = ft_split(av[vars->ac - 2], ' ');
+	if (dup2(pipefd[vars->ac - 5][0], STDIN_FILENO) < 0)
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
 	if (dup2(vars->fd_out, STDOUT_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	close_all_pipes(pipefd, ac);
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
+	close_all_pipes(pipefd, vars->ac);
 	close(vars->fd_in);
 	close(vars->fd_out);
-	cmd = vars->av[ac - 4];
+	cmd = vars->av[vars->ac - 4];
 	if (!cmd)
-		return (free_split(split_cmd), free_all(vars), exit(127));
-	execve(cmd, split_cmd, vars->env_cpy);
-	perror("execve last");
-	exit(1);
+		return (free_split(split_cmd), free(pipefd), free_all(vars), exit(127));
+	if (execve(cmd, split_cmd, vars->env_cpy) < 0)
+		return (perror("execve first"), free(pipefd), free_all(vars), exit(1));
 }
 
-void	middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int ac,
-		int i)
+void	middle_child_process(t_vars *vars, char **av, int (*pipefd)[2], int i)
 {
 	char	*cmd;
 	char	**split_cmd;
 
 	split_cmd = ft_split(av[i + 2], ' ');
 	if (dup2(pipefd[i - 1][0], STDIN_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
 	if (dup2(pipefd[i][1], STDOUT_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	close_all_pipes(pipefd, ac);
+		return (perror("dup2"), free(pipefd), free_split(split_cmd),
+			free_all(vars), exit(1));
+	close_all_pipes(pipefd, vars->ac);
 	close(vars->fd_in);
 	close(vars->fd_out);
 	cmd = vars->av[i];
 	if (!cmd)
-		return (free_split(split_cmd), free_all(vars), exit(127));
-	execve(cmd, split_cmd, vars->env_cpy);
-	perror("execve middle");
-	exit(1);
+		return (free_split(split_cmd), free(pipefd), free_all(vars), exit(127));
+	if (execve(cmd, split_cmd, vars->env_cpy) < 0)
+		return (perror("execve first"), free(pipefd), free_all(vars), exit(1));
 }
 
-void	exec_children(t_vars *vars, char **av, int ac, int (*pipefd)[2])
+void	exec_children(t_vars *vars, char **av, int (*pipefd)[2])
 {
 	int	i;
 
 	i = 1;
 	vars->pid[0] = fork();
 	if (vars->pid[0] < 0)
-		return (perror("Fork"), free_all(vars), exit(1));
+		return (perror("Fork"), free(pipefd), free_all(vars), exit(1));
 	if (vars->pid[0] == 0)
 		first_child_process(vars, av, pipefd);
-	while (i < ac - 4)
+	while (i < vars->ac - 4)
 	{
 		vars->pid[i] = fork();
 		if (vars->pid[i] < 0)
-			return (perror("Fork"), free_all(vars), exit(1));
+			return (perror("Fork"), free(pipefd), free_all(vars), exit(1));
 		if (vars->pid[i] == 0)
-			middle_child_process(vars, av, pipefd, ac, i);
+			middle_child_process(vars, av, pipefd, i);
 		i++;
 	}
-	vars->pid[ac - 4] = fork();
-	if (vars->pid[ac - 4] < 0)
-		return (perror("Fork"), free_all(vars), exit(1));
-	if (vars->pid[ac - 4] == 0)
-		last_child_process(vars, av, pipefd, ac);
+	vars->pid[vars->ac - 4] = fork();
+	if (vars->pid[vars->ac - 4] < 0)
+		return (perror("Fork"), free(pipefd), free_all(vars), exit(1));
+	if (vars->pid[vars->ac - 4] == 0)
+		last_child_process(vars, av, pipefd);
 }
 
-void	pipex(t_vars *vars, char **av, int ac)
+void	pipex(t_vars *vars, char **av)
 {
-	int	pipefd[ac - 5][2];
+	int	(*pipefd)[2];
 	int	i;
 
+	pipefd = malloc(sizeof(int [vars->ac][2]));
 	i = 0;
-	while (i < ac - 4)
+	if (!pipefd)
+		return (free_all(vars), exit(1));
+	while (i < vars->ac - 4)
 	{
 		if (pipe(pipefd[i]) < 0)
-			return (perror("Pipe"), free_all(vars), exit(1));
+			return (perror("Pipe"), free(pipefd), free_all(vars), exit(1));
 		i++;
 	}
-	exec_children(vars, av, ac, pipefd);
-	close_all_pipes(pipefd, ac);
+	exec_children(vars, av, pipefd);
+	close_all_pipes(pipefd, vars->ac);
 	close(vars->fd_in);
 	close(vars->fd_out);
 	while (wait(NULL) > 0)
 		;
+	free(pipefd);
 	free_all(vars);
 }

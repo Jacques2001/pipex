@@ -1,5 +1,5 @@
-NAME            = 	pipexes
-NAME_BONUS		= 	pipex
+NAME            = 	pipex
+NAME_BONUS		= 	pipexes
 
 SRC_DIR         = 	srcs
 

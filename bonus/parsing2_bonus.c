@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:10 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:13:25 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:41:18 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	vars_init(t_vars *vars, char **av, char **env, int ac)
 	int	i;
 
 	i = 0;
+	vars->ac = ac;
 	vars->av_i = 0;
 	vars->fd_in = 0;
 	vars->fd_out = 0;

@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:15:42 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:29:17 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 
 typedef struct s_vars
 {
-	int av_i;
+	int		ac;
+	int		av_i;
 	char	**av;
 	int		fd_in;
 	int		fd_out;
@@ -39,10 +40,10 @@ typedef struct s_vars
 char		**find_path(char **env);
 int			check_av(char **path, char *str, t_vars *vars);
 void		vars_init(t_vars *vars, char **av, char **env, int ac);
-void		pipex(t_vars *vars, char **av, int ac);
+void		pipex(t_vars *vars, char **av);
 void		free_all(t_vars *vars);
 int			is_empty_cmd(int ac, char **av);
 void		close_all_pipes(int (*pipefd)[2], int ac);
-void		check_cmd(t_vars *vars, int ac, char **av);
+void		check_cmd(t_vars *vars, char **av);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:17:17 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:29:08 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,12 @@ int	is_empty_cmd(int ac, char **av)
 	return (0);
 }
 
-void	check_cmd(t_vars *vars, int ac, char **av)
+void	check_cmd(t_vars *vars, char **av)
 {
-	int i;
+	int	i;
 
 	i = 2;
-	while (i < ac - 1)
+	while (i < vars->ac - 1)
 	{
 		if (check_av(vars->path, av[i++], vars) == 0)
 		{

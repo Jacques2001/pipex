@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:53 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 13:16:06 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/13 13:29:35 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ int	main(int ac, char **av, char **env)
 	vars->fd_out = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (vars->fd_in == -1)
 		return (ft_printf("File not found\n"), free_all(vars), 0);
-	check_cmd(vars, ac, av);
-	return (pipex(vars, av, ac), 0);
+	check_cmd(vars, av);
+	return (pipex(vars, av), 0);
 }
