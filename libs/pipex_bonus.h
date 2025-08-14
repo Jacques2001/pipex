@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:44 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 16:53:36 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:14:56 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ void		free_all(t_vars *vars);
 int			is_empty_cmd(int ac, char **av);
 void		close_all_pipes(int (*pipefd)[2], int ac);
 void		check_cmd(t_vars *vars, char **av);
-// void		heredoc(char ***av, int *ac, t_vars *vars);
 void		heredoc(t_vars *vars, int *ac, char ***av);
-
 
 #endif

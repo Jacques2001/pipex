@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:37:17 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/03 18:35:47 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:11:58 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 int					ft_atoi(const char *str);
-char				*get_next_line(int fd);
+char				*get_next_line(int fd, int free_flag);
 char				*g_ft_strjoin(char *s1, char *s2);
 int					g_ft_strlen(char *str);
 char				*g_ft_strdup(char *s1);
@@ -81,5 +81,6 @@ char				*g_ft_substr(char *s, int start, int len);
 int					check_line(char *to_check);
 void				free_split(char **split);
 int					count_args(char **path);
+char				*free_last_gnl(int free_flag, char *stash);
 
 #endif

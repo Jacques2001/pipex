@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 16:33:54 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:14:44 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int	check_av(char **path, char *str, t_vars *vars)
 	while (path[i])
 	{
 		joined = ft_strjoin(path[i], split[0]);
-		// printf("%s\n", joined);
 		if (access(joined, X_OK) == 0)
 			return (free_split(split), vars->av[vars->av_i++] = joined, 1);
 		free(joined);
@@ -112,7 +111,6 @@ void	check_cmd(t_vars *vars, char **av)
 	{
 		if (check_av(vars->path, av[i++], vars) == 0)
 		{
-			// printf("%s\n", av[i]);
 			ft_printf("Command not found\n");
 			free_all(vars);
 			exit(127);

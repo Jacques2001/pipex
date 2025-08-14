@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:14:13 by jchiu             #+#    #+#             */
-/*   Updated: 2025/07/25 12:14:05 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:12:31 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,23 +76,23 @@ void	fill_stash(char **stash, char *buf, int nb_read)
 	}
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, int free_flag)
 {
-	char		*buf;
 	static char	*stash;
+	char		*buf;
 	int			nb_read;
 
 	nb_read = -1;
-	if (fd < 0)
-		return (free(stash), stash = NULL, NULL);
-	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (buf == NULL)
+	if (fd < 0 || free_flag)
+		return (free_last_gnl(free_flag, stash));
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
 		return (free(stash), stash = NULL, NULL);
 	while (nb_read != 0)
 	{
 		nb_read = read(fd, buf, BUFFER_SIZE);
 		if (nb_read == -1)
-			return (free(buf), free(stash), stash = NULL, (NULL));
+			return (free(buf), free(stash), stash = NULL, NULL);
 		buf[nb_read] = '\0';
 		fill_stash(&stash, buf, nb_read);
 		if (!stash)
@@ -100,9 +100,9 @@ char	*get_next_line(int fd)
 		if (check_line(stash) >= 0)
 			return (free(buf), extract_line(&stash));
 	}
-	if (stash != NULL && *stash != '\0')
+	if (stash && *stash)
 		return (last_line_check(&stash, buf));
-	return (free(stash), stash = NULL, free(buf), (NULL));
+	return (free(stash), stash = NULL, free(buf), NULL);
 }
 
 // int	main(void)

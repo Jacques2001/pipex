@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:10 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/13 16:58:58 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:26:52 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,67 +80,30 @@ void	vars_init(t_vars *vars, char **av, char **env, int ac)
 	}
 }
 
-// void	heredoc(char ***av, int *ac, t_vars *vars)
-// {
-// 	char *line;
-// 	int pipe_fd[2];
-	
-// 	line = NULL;
-// 	if (pipe(pipe_fd) < 0)
-// 		return (perror("pipe"), exit(1));
-// 	while (1)
-// 	{
-// 		ft_printf("pipe heredoc> ");
-// 		line = get_next_line(0);
-// 		if (!line)
-// 			break;
-// 		if (ft_strncmp(line, (*av)[2], ft_strlen((*av)[2])) == 0)
-// 		{
-// 			free(line);
-// 			break;
-// 		}
-// 		write(pipe_fd[1], line, ft_strlen(line));
-// 		free(line);
-// 	}
-// 	close(pipe_fd[1]); // écriture : fermée car plus utilisée
-// 	// if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
-// 	// 	exit(1);
-// 	// close(pipe_fd[1]);
-// 	// close(pipe_fd[0]);
-// 	if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
-// 		exit(1);
-// 	close(pipe_fd[0]); // lecture : fermée car dupliquée sur STDIN
-// 	// close(pipe_fd[1]); // écriture : fermée car plus utilisée
-// 	(*av) += 1;
-// 	(*ac)--;
-// 	vars->ac--;
-// }
-
 void	heredoc(t_vars *vars, int *ac, char ***av)
 {
 	int		pipe_fd[2];
 	char	*line;
 
+	if (*ac < 6)
+		return (ft_printf("Argument not valid\n"), free_all(vars), exit(1));
 	if (pipe(pipe_fd) < 0)
 		return (perror("pipe"), free_all(vars), exit(1));
 	while (1)
 	{
 		ft_printf("pipe heredoc> ");
-		line = get_next_line(STDIN_FILENO);
+		line = get_next_line(0, 0);
 		if (!line)
-			break;
+			break ;
 		if (ft_strncmp(line, (*av)[2], ft_strlen((*av)[2])) == 0
 			&& line[ft_strlen((*av)[2])] == '\n')
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
 	}
-	close(pipe_fd[1]);        
-	vars->fd_in = pipe_fd[0]; 
-	(*av) += 1;               
-	(*ac)--;                 
-	vars->ac--;
+	(void)(close(pipe_fd[1]), vars->fd_in = pipe_fd[0], (*av)++, (*ac)--,
+		vars->ac--, get_next_line(0, 1));
 }
