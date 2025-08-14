@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/14 11:14:44 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 14:41:23 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	check_av(char **path, char *str, t_vars *vars)
 		i++;
 	}
 	free_split(split);
+	vars->av[vars->av_i++] = ft_strdup("");
 	return (0);
 }
 
@@ -107,13 +108,12 @@ void	check_cmd(t_vars *vars, char **av)
 	int	i;
 
 	i = 2;
-	while (i < vars->ac - 1)
+	while (i < vars->ac - 2)
+		check_av(vars->path, av[i++], vars);
+	if (check_av(vars->path, av[vars->ac - 2], vars) == 0)
 	{
-		if (check_av(vars->path, av[i++], vars) == 0)
-		{
-			ft_printf("Command not found\n");
-			free_all(vars);
-			exit(127);
-		}
+		perror("error");
+		free_all(vars);
+		exit(127);
 	}
 }
