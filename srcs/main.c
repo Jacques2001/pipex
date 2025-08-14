@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:25 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/09 16:25:17 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/14 13:43:04 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@ int	main(int ac, char **av, char **env)
 	vars->fd_in = open(av[1], O_RDONLY);
 	vars->fd_out = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (vars->fd_in == -1)
-		return (ft_printf("File not found\n"), free_all(vars), 0);
-	if (check_av2(vars->path, av, vars) == 0)
-		return (ft_printf("Command not found\n"), free_all(vars), 0);
+		perror("error");
+	check_av2(vars->path, av, vars);
 	if (check_av3(vars->path, av, vars) == 0)
-		return (ft_printf("Command not found\n"), free_all(vars), 127);
+		return (perror("error"), free_all(vars), 127);
 	pipex(vars, av);
 	return (0);
 }

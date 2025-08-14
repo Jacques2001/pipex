@@ -1,0 +1,13 @@
+total 44
+drwxr-xr-x 2 jchiu 2025_paris    96 Aug 12 12:57 bonus
+-rwxrwxrwx 1 jchiu 2025_paris     0 Aug 14 11:33 file1
+-rw-r--r-- 1 jchiu 2025_paris     0 Aug 14 11:27 file2
+drwxr-xr-x 2 jchiu 2025_paris  8192 Aug 14 11:12 libft
+drwxr-xr-x 2 jchiu 2025_paris    42 Aug  9 12:32 libs
+-rw-r--r-- 1 jchiu 2025_paris   996 Aug 14 11:45 Makefile
+drwxr-xr-x 4 jchiu 2025_paris    31 Aug  9 12:28 objs
+-rw-r--r-- 1 jchiu 2025_paris     0 Aug 14 11:48 outfile
+-rwxr-xr-x 1 jchiu 2025_paris 28184 Aug 14 11:45 pipexes
+drwxr-xr-x 2 jchiu 2025_paris    72 Aug  9 16:15 srcs
+drwxr-xr-x 5 jchiu 2025_paris   221 Aug 14 11:42 tester
+drwxr-xr-x 8 jchiu 2025_paris   181 Aug  9 16:43 xico
