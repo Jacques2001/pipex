@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:29 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/15 13:09:31 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/15 13:53:34 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	check_av2(char **path, char **av, t_vars *vars)
 		if (ft_strncmp(path[i], split[0], ft_strlen(path[i])) == 0)
 		{
 			joined = ft_strdup(split[0]);
-			return (free_split(split), vars->av2 = joined, 1);	 
+			return (free_split(split), vars->av2 = joined, 1);
 		}
 		joined = ft_strjoin(path[i], split[0]);
 		if (access(joined, X_OK) == 0)
@@ -81,7 +81,7 @@ int	check_av3(char **path, char **av, t_vars *vars)
 		if (ft_strncmp(path[i], split[0], ft_strlen(path[i])) == 0)
 		{
 			joined = ft_strdup(split[0]);
-			return (free_split(split), vars->av3 = joined, 1);	 
+			return (free_split(split), vars->av3 = joined, 1);
 		}
 		joined = ft_strjoin(path[i], split[0]);
 		if (access(joined, X_OK) == 0)
