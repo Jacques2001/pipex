@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:25 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/14 15:12:59 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/15 12:10:14 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int ac, char **av, char **env)
 	if (is_empty_cmd(av[2]) == 1 || is_empty_cmd(av[3]) == 1)
 		return (ft_printf("Command not found\n"), 1);
 	if (ac != 5)
-		return (ft_printf("Not enough argument\n"), exit(1), 127);
+		return (ft_printf("Arguments not valid\n"), exit(1), 127);
 	vars = malloc(sizeof(t_vars));
 	if (!vars)
 		return (1);

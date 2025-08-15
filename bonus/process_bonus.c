@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:18 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/14 15:15:02 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/15 12:06:04 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 {
-	char	*cmd;
 	char	**split_cmd;
 	int		fd_null;
 
@@ -34,10 +33,10 @@ void	first_child_process(t_vars *vars, char **av, int (*pipefd)[2])
 	close(pipefd[0][1]);
 	close(vars->fd_in);
 	close(vars->fd_out);
-	if (!(cmd = vars->av[0])|| access(cmd, X_OK) != 0)
+	if (!vars->av[0] || access(vars->av[0], X_OK) != 0)
 		return (perror("error"),
 			free_split(split_cmd), free(pipefd), free_all(vars), exit(127));
-	if (execve(cmd, split_cmd, vars->env_cpy) < 0)
+	if (execve(vars->av[0], split_cmd, vars->env_cpy) < 0)
 		return (perror("error"), free(pipefd), free_all(vars), exit(1));
 }
 
