@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/16 15:54:29 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 17:19:42 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,14 @@ void	check_cmd(t_vars *vars, char **av)
 
 	i = 2;
 	while (i < vars->ac - 2)
-		check_av(vars->path, av[i++], vars);
+	{
+		if (check_av(vars->path, av[i], vars) == 0)
+			ft_printf("error: Command not found: %s\n", av[i]);
+		i++;
+	}
 	if (check_av(vars->path, av[vars->ac - 2], vars) == 0)
 	{
-		perror("error");
+		ft_printf("error: Command not found: %s\n", av[vars->ac - 2]);
 		free_all(vars);
 		exit(127);
 	}
