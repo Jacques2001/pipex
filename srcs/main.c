@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:25 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/15 12:10:14 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 13:54:38 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ int	main(int ac, char **av, char **env)
 	vars->fd_out = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (vars->fd_in == -1)
 		perror("error");
-	check_av2(vars->path, av, vars);
+	if (check_av2(vars->path, av, vars) == 0)
+		ft_printf("error: Command not found: %s\n", av[2]);
 	if (check_av3(vars->path, av, vars) == 0)
-		return (perror("error"), free_all(vars), 127);
-	pipex(vars, av);
-	return (0);
+		return (ft_printf("error: Command not found: %s\n", av[3]),
+			free_all(vars), 127);
+	return (pipex(vars, av), 0);
 }

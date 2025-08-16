@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:15:56 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/15 13:49:46 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 15:54:29 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**give_slash(char **path)
 	i = 0;
 	copy = malloc((count_args(path) + 1) * sizeof(char *));
 	if (!copy)
-		return (NULL);
+		return (free_split(path), NULL);
 	while (i < count_args(path) + 1)
 		copy[i++] = NULL;
 	i = 0;
@@ -28,7 +28,7 @@ char	**give_slash(char **path)
 	{
 		copy[i] = ft_strjoin(path[i], "/");
 		if (!copy[i])
-			return (free_split(copy), NULL);
+			return (free_split(copy), free_split(path), NULL);
 		i++;
 	}
 	free_split(path);
@@ -50,11 +50,11 @@ int	check_av(char **path, char *str, t_vars *vars)
 	while (path[i])
 	{
 		if (ft_strncmp(path[i], split[0], ft_strlen(path[i])) == 0)
-		{
-			joined = ft_strdup(split[0]);
-			return (free_split(split), vars->av[vars->av_i++] = joined, 1);
-		}
+			return (joined = ft_strdup(split[0]), free_split(split),
+				vars->av[vars->av_i++] = joined, 1);
 		joined = ft_strjoin(path[i], split[0]);
+		if (!joined)
+			return (free_split(split), free_all(vars), exit(1), 1);
 		if (access(joined, X_OK) == 0)
 			return (free_split(split), vars->av[vars->av_i++] = joined, 1);
 		free(joined);
@@ -68,7 +68,6 @@ char	**find_path(char **env)
 {
 	int		i;
 	char	**path;
-	char	**copy;
 	char	**env_cpy;
 
 	i = 0;
@@ -82,14 +81,16 @@ char	**find_path(char **env)
 		{
 			env_cpy[i] = ft_substr(env[i], 5, ft_strlen(env[i]));
 			if (!env_cpy[i])
-				return (NULL);
+				return (free(env_cpy), NULL);
 			path = ft_split(env_cpy[i], ':');
+			if (!path)
+				return (free(env_cpy[i]), free(env_cpy), NULL);
 			free(env_cpy[i]);
 			break ;
 		}
 		i++;
 	}
-	return (free(env_cpy), copy = give_slash(path), copy);
+	return (free(env_cpy), give_slash(path));
 }
 
 int	is_empty_cmd(int ac, char **av)

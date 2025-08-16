@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 12:33:37 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/14 14:28:07 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 16:09:25 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,29 +25,41 @@ void	ft_waitpid(t_vars *vars)
 		return (free_all(vars), exit(1));
 }
 
-void	child1_process(t_vars *vars, char **av, int *pipefd)
+void	child1_support(t_vars *vars, char **split_cmd)
 {
-	char	*cmd;
-	char	**split_cmd;
-	int		fd_null;
-
-	cmd = vars->av2;
-	split_cmd = ft_split(av[2], ' ');
 	if (vars->fd_in >= 0)
-		dup2(vars->fd_in, STDIN_FILENO);
+	{
+		if (dup2(vars->fd_in, STDIN_FILENO) < 0)
+			return (perror("error"), free_split(split_cmd), free_all(vars),
+				exit(1));
+	}
 	else
 	{
-		fd_null = open("/dev/null", O_RDONLY);
-		dup2(fd_null, STDIN_FILENO);
-		close(fd_null);
+		vars->fd_null = open("/dev/null", O_RDONLY);
+		if (dup2(vars->fd_null, STDIN_FILENO) < 0)
+			return (perror("error"), free_split(split_cmd), free_all(vars),
+				exit(1));
+		close(vars->fd_null);
 	}
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	if (!cmd || access(cmd, X_OK) != 0)
-		return (perror("error"),
-			free_split(split_cmd), free_all(vars), exit(127));
-	if (execve(cmd, split_cmd, vars->env_cpy) < 0)
+}
+
+void	child1_process(t_vars *vars, char **av, int *pipefd)
+{
+	char	**split_cmd;
+
+	split_cmd = ft_split(av[2], ' ');
+	child1_support(vars, split_cmd);
+	if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+		return (perror("error"), free_split(split_cmd), free_all(vars),
+			exit(1));
+	if (pipefd[0] >= 0)
+		close(pipefd[0]);
+	if (pipefd[1] >= 0)
+		close(pipefd[1]);
+	if (!vars->av2 || access(vars->av2, X_OK) != 0)
+		return (perror("error"), free_split(split_cmd), free_all(vars),
+			exit(127));
+	if (execve(vars->av2, split_cmd, vars->env_cpy) < 0)
 		return (perror("error"), free_all(vars), free_split(split_cmd),
 			exit(1));
 }
@@ -59,13 +71,12 @@ void	child2_process(t_vars *vars, char **av, int *pipefd)
 
 	split_cmd = ft_split(av[3], ' ');
 	if (dup2(pipefd[0], STDIN_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
+		return (perror("error"), free_split(split_cmd), free_all(vars),
+			exit(1));
 	if (dup2(vars->fd_out, STDOUT_FILENO) < 0)
-		return (perror("dup2"), free_split(split_cmd), free_all(vars), exit(1));
-	close(pipefd[0]);
-	close(vars->fd_in);
-	close(pipefd[1]);
-	close(vars->fd_out);
+		return (perror("error"), free_split(split_cmd), free_all(vars),
+			exit(1));
+	close_all(pipefd, vars);
 	cmd = vars->av3;
 	if (!cmd)
 		return (free_split(split_cmd), free_all(vars), exit(127));
@@ -79,21 +90,18 @@ void	pipex(t_vars *vars, char **av)
 	int	pipefd[2];
 
 	if (pipe(pipefd) < 0)
-		return (perror("Pipe"), free_all(vars), exit(1));
+		return (perror("error"), free_all(vars), exit(1));
 	vars->pid_1 = fork();
 	if (vars->pid_1 < 0)
-		return (perror("Fork"), free_all(vars), exit(1));
+		return (perror("error"), free_all(vars), exit(1));
 	if (vars->pid_1 == 0)
 		child1_process(vars, av, pipefd);
 	vars->pid_2 = fork();
 	if (vars->pid_2 < 0)
-		return (perror("Fork"), free_all(vars), exit(1));
+		return (perror("error"), free_all(vars), exit(1));
 	if (vars->pid_2 == 0)
 		child2_process(vars, av, pipefd);
-	close(vars->fd_in);
-	close(vars->fd_out);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	close_all(pipefd, vars);
 	ft_waitpid(vars);
 	free_all(vars);
 }

@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:10 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/14 11:26:52 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 15:47:20 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ void	close_all_pipes(int (*pipefd)[2], int ac)
 	i = 0;
 	while (i < ac - 4)
 	{
-		close(pipefd[i][0]);
-		close(pipefd[i][1]);
+		if (pipefd[i][0] >= 0)
+			close(pipefd[i][0]);
+		if (pipefd[i][1] >= 0)
+			close(pipefd[i][1]);
 		i++;
 	}
 }
@@ -59,10 +61,11 @@ void	vars_init(t_vars *vars, char **av, char **env, int ac)
 	int	i;
 
 	i = 0;
+	vars->fd_null = -1;
 	vars->ac = ac;
 	vars->av_i = 0;
-	vars->fd_in = 0;
-	vars->fd_out = 0;
+	vars->fd_in = -1;
+	vars->fd_out = -1;
 	vars->path = NULL;
 	vars->pid = malloc((ac - 3) * sizeof(pid_t));
 	if (!vars->pid)
