@@ -6,7 +6,7 @@
 /*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:16:10 by jchiu             #+#    #+#             */
-/*   Updated: 2025/08/16 17:23:56 by jchiu            ###   ########.fr       */
+/*   Updated: 2025/08/16 17:32:17 by jchiu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	heredoc(t_vars *vars, int *ac, char ***av)
 	int		pipe_fd[2];
 	char	*line;
 
-	vars->fd_out = open((*av)[vars->ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
+	vars->fd_out = open((*av)[vars->ac--], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (*ac < 6)
 		return (ft_printf("Argument not valid\n"), free_all(vars), exit(1));
 	if (pipe(pipe_fd) < 0)

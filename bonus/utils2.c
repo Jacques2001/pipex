@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchiu <jchiu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/16 17:30:02 by jchiu             #+#    #+#             */
+/*   Updated: 2025/08/16 17:30:03 by jchiu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libs/pipex_bonus.h"
 
 void	close_all(int *pipefd, t_vars *vars)
@@ -12,23 +24,23 @@ void	close_all(int *pipefd, t_vars *vars)
 		close(vars->fd_out);
 }
 
-void    child1_support(t_vars *vars, char **split_cmd)
+void	child1_support(t_vars *vars, char **split_cmd)
 {
 	if (vars->fd_in >= 0)
-    {
+	{
 		if (dup2(vars->fd_in, STDIN_FILENO) < 0)
-            return (perror("error"), free_split(split_cmd),
-			    free_all(vars), exit(1));
-    }
+			return (perror("error"), free_split(split_cmd), free_all(vars),
+				exit(1));
+	}
 	else
 	{
 		vars->fd_null = open("/dev/null", O_RDONLY);
-        if (vars->fd_null == -1)
-            return (perror("error"), free_split(split_cmd),
-			    free_all(vars), exit(1));
+		if (vars->fd_null == -1)
+			return (perror("error"), free_split(split_cmd), free_all(vars),
+				exit(1));
 		if (dup2(vars->fd_null, STDIN_FILENO) < 0)
-            return (perror("error"), free_split(split_cmd),
-			    free_all(vars), exit(1));
+			return (perror("error"), free_split(split_cmd), free_all(vars),
+				exit(1));
 		close(vars->fd_null);
 	}
 }
